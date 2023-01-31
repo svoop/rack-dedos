@@ -1,0 +1,3 @@
+[submodule "spec/maxmind_db"]
+	path = spec/maxmind_db
+	url = https://github.com/maxmind/MaxMind-DB.git

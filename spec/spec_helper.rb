@@ -8,6 +8,9 @@ require 'pathname'
 require 'minitest/autorun'
 require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos')
 
+require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'country')
+require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'user_agent')
+
 require 'minitest/sound'
 Minitest::Sound.success = Pathname(__dir__).join('sounds', 'success.mp3').to_s
 Minitest::Sound.failure = Pathname(__dir__).join('sounds', 'failure.mp3').to_s
@@ -42,7 +45,7 @@ String.infect_an_assertion :assert_equals_text, :must_equal_text
 
 $warning_counter = 0
 module WarningFilter
-  def warn(message, category: nil, **kwargs)
+  def warn(message)
     if message.match?(/^rack-dedos:/)
       $warning_counter += 1
     else

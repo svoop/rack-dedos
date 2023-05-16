@@ -83,11 +83,11 @@ use Rack::Dedos,
 
 ## Filters
 
-By default, all filters described below are applied. You can exclude exclude certain filters:
+By default, all filters described below are applied. You can exclude certain filters:
 
 ```ruby
 use Rack::Dedos,
-  exclude: [:user_agent]
+  except: [:user_agent]
 ```
 
 To only apply one specific filter, use the corresponding class as shown below.
@@ -95,7 +95,7 @@ To only apply one specific filter, use the corresponding class as shown below.
 ### User Agent Filter
 
 ```ruby
-use Rack::Dedos::UserAgent,
+use Rack::Dedos::Filters::UserAgent,
   cache_url: 'redis://redis.example.com:6379/12',   # db 12 on default port
   cache_key_prefix: 'dedos',   # key prefix for shared caches (default: nil)
   cache_period: 1800   # seconds (default: 900)
@@ -111,7 +111,7 @@ The following cache backends are supported:
 ### Country Filter
 
 ```ruby
-use Rack::Dedos::Country,
+use Rack::Dedos::Filters::Country,
   maxmind_db_file: '/var/db/maxmind/GeoLite2-Country.mmdb',
   allowed_countries: %i(AT CH DE),
   denied_countries: %i(RU)
@@ -136,6 +136,21 @@ wget --quiet -O /tmp/geoipupdate.tgz https://github.com/maxmind/geoipupdate/rele
 tar -xz -C /tmp -f /tmp/geoipupdate.tgz
 /tmp/geoipupdate_${version}_${arch}/geoipupdate -f "${conf}" -d "${dir}"
 ```
+
+## Real Client IP
+
+A word on how the real client IP is determined. Both Rack 2 and Rack 3 (up to 3.0.7 at the time of writing) may populate the request `ip` incorrectly. Here's what a minimalistic Rack app deloyed to Render (behind Cloudflare) reports:
+
+> request.ip = 172.71.135.17
+> request.forwarded_for = ["81.XXX.XXX.XXX", "172.71.135.17", "10.201.229.136"]
+
+Obviously, the reported IP 172.71.135.17 is not the real client IP, the correct one is the (redacted) 81.XXX.XXX.XXX.
+
+Due to this flaw, Rack::Dedos determines the real client IP as follows in order of priority:
+
+1. [`Cf-Connecting-Ip` header](https://developers.cloudflare.com/fundamentals/get-started/reference/http-request-headers/#cf-connecting-ip)
+2. First entry of the [`X-Forwarded-For` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
+3. [`ip` reported by Rack](https://github.com/rack/rack/blob/main/lib/rack/request.rb)
 
 ## Development
 

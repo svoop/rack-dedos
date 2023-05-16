@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../../../spec_helper'
+require_relative '../../../../spec_helper'
 
-describe Rack::Dedos::UserAgent do
+describe Rack::Dedos::Filters::UserAgent do
   before do
     Rack::Dedos.config.clear
     $warning_counter = 0
@@ -10,7 +10,7 @@ describe Rack::Dedos::UserAgent do
 
   describe :allowed? do
     subject do
-      Rack::Dedos::UserAgent.new(factory.app,
+      Rack::Dedos::Filters::UserAgent.new(factory.app,
         cache_url: 'hash'
       )
     end

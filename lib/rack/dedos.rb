@@ -6,11 +6,9 @@ require_relative 'dedos/version'
 
 module Rack
   module Dedos
-    lib_dir = ::File.expand_path(::File.dirname(__FILE__))
-    autoload :Cache, lib_dir + '/dedos/cache'
-    autoload :Base, lib_dir + '/dedos/base'
-    autoload :UserAgent, lib_dir + '/dedos/user_agent'
-    autoload :Country, lib_dir + '/dedos/country'
+
+    require_relative 'dedos/cache'
+    require_relative 'dedos/filters/base'
 
     class << self
       def config
@@ -21,8 +19,14 @@ module Rack
         except = Array options[:except]
 
         Rack::Builder.new do
-          use(::Rack::Dedos::UserAgent, options) unless except.include? :user_agent
-          use(::Rack::Dedos::Country, options) unless except.include? :country
+          unless except.include? :user_agent
+            require_relative 'dedos/filter/user_agent'
+            use(::Rack::Dedos::Filters::UserAgent, options)
+          end
+          unless except.include? :country
+            require_relative 'dedos/filter/country'
+            use(::Rack::Dedos::Filters::Country, options)
+          end
           run app
         end.to_app
       end

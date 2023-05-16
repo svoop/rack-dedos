@@ -1,6 +1,10 @@
 ## Main
 
-Nothing so far
+#### Changes
+
+* Determine real client IP
+* Drop autoload and put filters in proper namespace
+
 
 ## 0.1.0
 

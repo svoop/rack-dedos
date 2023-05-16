@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require_relative '../../../spec_helper'
+require_relative '../../../../spec_helper'
 
 # We're using the upstream test database included as a git submodule in
 # order to avoid license issues. For the contents of the test database see
 # https://github.com/maxmind/MaxMind-DB/blob/main/source-data/GeoIP2-Country-Test.json
-describe Rack::Dedos::Country do
+describe Rack::Dedos::Filters::Country do
   before do
     Rack::Dedos.config.clear
     $warning_counter = 0
   end
 
   let :maxmind_dir do
-    File.expand_path(File.dirname(__FILE__) + '../../../../maxmind_db')
+    File.expand_path(File.dirname(__FILE__) + '../../../../../maxmind_db')
   end
 
   describe :initialize do
     subject do
-      Rack::Dedos::Country.new(factory.app,
+      Rack::Dedos::Filters::Country.new(factory.app,
         maxmind_db_file: maxmind_db_file,
         allowed_countries: %i(CH AT)
       )
@@ -65,7 +65,7 @@ describe Rack::Dedos::Country do
 
     context "allowed_countries set" do
       subject do
-        Rack::Dedos::Country.new(factory.app,
+        Rack::Dedos::Filters::Country.new(factory.app,
           maxmind_db_file: maxmind_db_file,
           allowed_countries: %i(CH AT)
         )
@@ -96,7 +96,7 @@ describe Rack::Dedos::Country do
 
     context "denied_countries set" do
       subject do
-        Rack::Dedos::Country.new(factory.app,
+        Rack::Dedos::Filters::Country.new(factory.app,
           maxmind_db_file: maxmind_db_file,
           denied_countries: %i(RU)
         )
@@ -127,7 +127,7 @@ describe Rack::Dedos::Country do
 
     context "both allowed_countries and denied_countries set" do
       subject do
-        Rack::Dedos::Country.new(factory.app,
+        Rack::Dedos::Filters::Country.new(factory.app,
           maxmind_db_file: maxmind_db_file,
           allowed_countries: %i(CH AT),
           denied_countries: %i(RU AT)

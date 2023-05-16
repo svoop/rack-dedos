@@ -141,7 +141,7 @@ tar -xz -C /tmp -f /tmp/geoipupdate.tgz
 
 A word on how the real client IP is determined. Both Rack 2 and Rack 3 (up to 3.0.7 at the time of writing) may populate the request `ip` incorrectly. Here's what a minimalistic Rack app deloyed to Render (behind Cloudflare) reports:
 
-> request.ip = 172.71.135.17
+> request.ip = 172.71.135.17<br>
 > request.forwarded_for = ["81.XXX.XXX.XXX", "172.71.135.17", "10.201.229.136"]
 
 Obviously, the reported IP 172.71.135.17 is not the real client IP, the correct one is the (redacted) 81.XXX.XXX.XXX.

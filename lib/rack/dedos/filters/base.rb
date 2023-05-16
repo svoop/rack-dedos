@@ -39,17 +39,16 @@ module Rack
 
         # Get the real IP of the client
         #
-        # If a proxy such as Cloudflare is in the mix, the client IP reported
-        # by Rack may be wrong. Therefore, we determine the real client IP
-        # using the following priorities:
+        # If containers and/or proxies such as Cloudflare are in the mix, the
+        # client IP reported by Rack may be wrong. Therefore, we determine the
+        # real client IP using the following priorities:
         #
         # 1. Cf-Connecting-Ip header
         # 2. X-Forwarded-For header (also remove port number)
         # 3. IP reported by Rack
         #
         # @param request [Rack::Request]
-        # @return [String, nil] real client IP or +nil+ if X-Forwarded-For is
-        #   not set
+        # @return [String] real client IP
         def real_ip(request)
           case
           when ip = request.get_header('HTTP_CF_CONNECTING_IP')

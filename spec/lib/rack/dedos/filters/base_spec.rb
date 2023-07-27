@@ -34,7 +34,7 @@ describe Rack::Dedos::Filters::Base do
   describe :real_ip do
     context 'priority 1' do
       it 'returns the Cf-Connecting-Ip' do
-        mock_request = MiniTest::Mock.new
+        mock_request = Minitest::Mock.new
           .expect(:get_header, '1.2.3.4') { _1 == 'HTTP_CF_CONNECTING_IP' }
         _(subject.new(factory.app).send(:real_ip, mock_request)).must_equal '1.2.3.4'
         _(mock_request.verify).must_equal true
@@ -43,7 +43,7 @@ describe Rack::Dedos::Filters::Base do
 
     context 'priority 2' do
       it 'returns the first entry of X-Forwarded-For' do
-        mock_request = MiniTest::Mock.new
+        mock_request = Minitest::Mock.new
           .expect(:get_header, nil) { _1 == 'HTTP_CF_CONNECTING_IP' }
           .expect(:forwarded_for, '2.3.4.5, 3.4.5.6')
         _(subject.new(factory.app).send(:real_ip, mock_request)).must_equal '2.3.4.5'
@@ -51,7 +51,7 @@ describe Rack::Dedos::Filters::Base do
       end
 
       it 'returns the only entry of X-Forwarded-For' do
-        mock_request = MiniTest::Mock.new
+        mock_request = Minitest::Mock.new
           .expect(:get_header, nil) { _1 == 'HTTP_CF_CONNECTING_IP' }
           .expect(:forwarded_for, '3.4.5.6')
         _(subject.new(factory.app).send(:real_ip, mock_request)).must_equal '3.4.5.6'
@@ -59,7 +59,7 @@ describe Rack::Dedos::Filters::Base do
       end
 
       it 'removes port numbers which should not be there in the first place' do
-        mock_request = MiniTest::Mock.new
+        mock_request = Minitest::Mock.new
           .expect(:get_header, nil) { _1 == 'HTTP_CF_CONNECTING_IP' }
           .expect(:forwarded_for, '4.5.6.7:123')
         _(subject.new(factory.app).send(:real_ip, mock_request)).must_equal '4.5.6.7'
@@ -69,7 +69,7 @@ describe Rack::Dedos::Filters::Base do
 
     context 'priority 3' do
       it "returns the IP reported by Rack" do
-        mock_request = MiniTest::Mock.new
+        mock_request = Minitest::Mock.new
           .expect(:get_header, nil) { _1 == 'HTTP_CF_CONNECTING_IP' }
           .expect(:forwarded_for, nil)
           .expect(:ip, '4.5.6.7')

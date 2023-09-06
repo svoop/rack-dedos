@@ -11,11 +11,9 @@ require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos')
 require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'country')
 require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'user_agent')
 
-require 'minitest/sound'
-Minitest::Sound.success = Pathname(__dir__).join('sounds', 'success.mp3').to_s
-Minitest::Sound.failure = Pathname(__dir__).join('sounds', 'failure.mp3').to_s
-
+require 'minitest/flash'
 require 'minitest/focus'
+
 require Pathname(__dir__).join('factory')
 
 class Minitest::Spec

@@ -1,7 +1,7 @@
 [![Version](https://img.shields.io/gem/v/rack-dedos.svg?style=flat)](https://rubygems.org/gems/rack-dedos)
 [![Tests](https://img.shields.io/github/actions/workflow/status/svoop/rack-dedos/test.yml?style=flat&label=tests)](https://github.com/svoop/rack-dedos/actions?workflow=Test)
 [![Code Climate](https://img.shields.io/codeclimate/maintainability/svoop/rack-dedos.svg?style=flat)](https://codeclimate.com/github/svoop/rack-dedos/)
-[![Donorbox](https://img.shields.io/badge/donate-on_donorbox-yellow.svg)](https://donorbox.org/bitcetera)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/svoop.svg)](https://github.com/sponsors/svoop)
 
 <img src="https://github.com/svoop/rack-dedos/raw/main/doc/chop-chop.png" alt="chop-chop" align="right">
 
@@ -14,6 +14,8 @@ The filters have been proven to work against certain DoS attacks, however, they 
 * [Homepage](https://github.com/svoop/rack-dedos)
 * [API](https://www.rubydoc.info/gems/rack-dedos)
 * Author: [Sven Schwyn - Bitcetera](https://bitcetera.com)
+
+Thank you for supporting free and open-source software by sponsoring on [GitHub](https://github.com/sponsors/svoop) or on [Donorbox](https://donorbox.com/bitcetera). Any gesture is appreciated, from a single Euro for a ☕️ cup of coffee to 🍹 early retirement.
 
 ## Install
 

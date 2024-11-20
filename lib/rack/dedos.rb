@@ -20,11 +20,11 @@ module Rack
 
         Rack::Builder.new do
           unless except.include? :user_agent
-            require_relative 'dedos/filter/user_agent'
+            require_relative 'dedos/filters/user_agent'
             use(::Rack::Dedos::Filters::UserAgent, options)
           end
           unless except.include? :country
-            require_relative 'dedos/filter/country'
+            require_relative 'dedos/filters/country'
             use(::Rack::Dedos::Filters::Country, options)
           end
           run app

@@ -3,6 +3,7 @@
 #### Fixes
 
 * Fix paths on conditional requires
+* Renew certificate
 
 ## 0.2.0
 

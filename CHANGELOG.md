@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.2.1
+
 #### Fixes
 
 * Fix paths on conditional requires

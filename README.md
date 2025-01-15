@@ -127,7 +127,7 @@ The MaxMind GeoLite2 database is free, however, you have to create an account on
 
 For automatic updates, create a `geoipupdate.conf` file and then use the [geoipupdate tool for your arch](https://github.com/maxmind/geoipupdate/releases) to fetch the latest country database.
 
-The bundled `geoipget` shell script does all this in one swipe:
+The bundled `geoipget` Bash script does all this in one swipe:
 
 ```
 geoipget -h

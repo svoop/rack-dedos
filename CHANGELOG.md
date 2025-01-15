@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+#### Changes
+* Use Bash for `geoipget` to prevent problems with `/bin/sh` diversity
 
 ## 0.2.3
 

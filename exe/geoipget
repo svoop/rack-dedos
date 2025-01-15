@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+set -euo pipefail
+
+if [ $# -eq 0 ] || [[ "$@" == *"-h"* ]]; then
+  echo "Usage: geoipget DIR CONFIG [ARCH]"
+  echo " DIR    directory to write the database file to"
+  echo " CONFIG geoipupdate config file"
+  echo " ARCH   architecture (default: linux_amd64)"
+  exit
+fi
+
+dir=$1
+config=$2
+arch=${3:-linux_amd64}
+
+repo="maxmind/geoipupdate"
+version=$( \
+  wget -qO- "https://api.github.com/repos/${repo}/releases/latest" | \
+  grep '"tag_name":' | \
+  cut -d '"' -f 4 | \
+  sed 's/^v//' \
+)
+
+tmp=$(mktemp -d)
+clean_up() { test -d "${tmp}" && rm -rf "${tmp}"; }
+trap clean_up EXIT
+
+wget --quiet -O "${tmp}/geoipupdate.tgz" \
+  https://github.com/${repo}/releases/download/v${version}/geoipupdate_${version}_${arch}.tar.gz
+tar xz -C "${tmp}" -f "${tmp}/geoipupdate.tgz"
+"/${tmp}/geoipupdate_${version}_${arch}/geoipupdate" -f "${config}" -d "${dir}"

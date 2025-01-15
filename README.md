@@ -125,18 +125,13 @@ Either allow or deny requests by probable country of origin. If both are set, th
 
 The MaxMind GeoLite2 database is free, however, you have to create an account on [maxmind.com](https://www.maxmind.com) and then download the country database.
 
-For automatic updates, create a `geoipupdate.conf` file and then use the [geoipupdate tool](https://github.com/maxmind/geoipupdate/releases) to fetch the latest country database:
+For automatic updates, create a `geoipupdate.conf` file and then use the [geoipupdate tool for your arch](https://github.com/maxmind/geoipupdate/releases) to fetch the latest country database.
+
+The bundled `geoipget` shell script does all this in one swipe:
 
 ```
-version=4.10.0
-arch=linux_amd64
-conf=/etc/geoipupdate.conf
-dir=/var/db/maxmind/
-
-mkdir -p "${dir}"
-wget --quiet -O /tmp/geoipupdate.tgz https://github.com/maxmind/geoipupdate/releases/download/v${version}/geoipupdate_${version}_${arch}.tar.gz
-tar -xz -C /tmp -f /tmp/geoipupdate.tgz
-/tmp/geoipupdate_${version}_${arch}/geoipupdate -f "${conf}" -d "${dir}"
+geoipget -h
+geoipget . /etc/geoipupdate.conf linux_amd64
 ```
 
 ## Real Client IP

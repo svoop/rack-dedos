@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+#### Additions
+* `geoipget` shell script
 
 ## 0.2.2
 

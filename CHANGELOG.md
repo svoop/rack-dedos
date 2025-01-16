@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+#### Changes
+* Root `File` operations to prevent clashes with Rack
 
 ## 0.3.0
 

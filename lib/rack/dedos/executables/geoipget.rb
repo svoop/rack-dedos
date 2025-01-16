@@ -17,7 +17,7 @@ module Rack
           OptionParser.new do |o|
             o.banner = <<~END
               Download the geoip database from Maxmind.
-              Usage: #{File.basename($0)} CONFIG_FILE
+              Usage: #{::File.basename($0)} CONFIG_FILE
             END
             o.on('-a', '--arch ARCH', String, "architecture (default: #{arch})") { @arch = _1 }
             o.on('-d', '--dir DIR', String, "destination directory (default: #{dir})") { @dir = _1 }
@@ -28,8 +28,8 @@ module Rack
         end
 
         def run
-          fail "cannot read config file #{config}" unless config && File.readable?(config)
-          Maxmind.new(config, File.realpath(dir), arch).get
+          fail "cannot read config file #{config}" unless config && ::File.readable?(config)
+          Maxmind.new(config, ::File.realpath(dir), arch).get
         end
 
         def self.about
@@ -69,24 +69,23 @@ module Rack
             uri = URI("https://github.com/#{REPO}/releases/download/v#{version}/geoipupdate_#{version}_#{arch}.tar.gz")
             Dir.mktmpdir do |tmp|
               Dir.chdir tmp
-              File.binwrite('geoipupdate.tar.gz', uri.read)
-              File.open("geoipupdate.tar.gz", 'rb') do |file|
+              uri.open do |file|
                 Zlib::GzipReader.wrap(file) do |gz|
                   Gem::Package::TarReader.new(gz) do |tar|
                     tar.each do |entry|
                       if entry.full_name.match? %r(/geoipupdate$)
-                        File.write('geoipupdate', entry.read)
+                        ::File.write('geoipupdate', entry.read)
                       end
                     end
                   end
                 end
               end
-              File.chmod(0755, 'geoipupdate')
+              ::File.chmod(0755, 'geoipupdate')
               yield
             end
           ensure
             lockfile = "#{dir}/.geoipupdate.lock"
-            File.unlink(lockfile) if File.exist? lockfile
+            ::File.unlink(lockfile) if ::File.exist? lockfile
           end
 
           def download

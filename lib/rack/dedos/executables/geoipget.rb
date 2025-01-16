@@ -29,7 +29,7 @@ module Rack
 
         def run
           fail "cannot read config file #{config}" unless config && ::File.readable?(config)
-          Maxmind.new(config, ::File.realpath(dir), arch).get
+          Maxmind.new(::File.realpath(config), ::File.realpath(dir), arch).get
         end
 
         def self.about

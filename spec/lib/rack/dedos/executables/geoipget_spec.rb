@@ -4,7 +4,7 @@ require_relative '../../../../spec_helper'
 
 describe Rack::Dedos::Executables::Geoipget::Maxmind do
   subject do
-    Rack::Dedos::Executables::Geoipget::Maxmind.new(nil, nil, 'linux_amd64')
+    Rack::Dedos::Executables::Geoipget::Maxmind.new('.', '.', 'linux_amd64')
   end
 
   describe :latest_version do

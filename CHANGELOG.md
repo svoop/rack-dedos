@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+#### Changes
+* Resolve all paths to prevent problems with relative paths
 
 ## 0.3.1
 

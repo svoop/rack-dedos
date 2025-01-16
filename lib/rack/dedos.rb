@@ -3,6 +3,7 @@
 require 'rack'
 
 require_relative 'dedos/version'
+require_relative 'dedos/executables/geoipget'
 
 module Rack
   module Dedos

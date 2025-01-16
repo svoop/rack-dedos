@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+#### Changes
+* Convert `geoipget` from Bash to Ruby
 
 ## 0.2.4
 

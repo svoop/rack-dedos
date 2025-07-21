@@ -1,54 +1,55 @@
 ## Main
 
-Nothing so far
+### Changes
+* Drop certs
 
 ## 0.3.2
 
-#### Changes
+### Changes
 * Resolve all paths to prevent problems with relative paths
 
 ## 0.3.1
 
-#### Changes
+### Changes
 * Root `File` operations to prevent clashes with Rack
 
 ## 0.3.0
 
-#### Changes
+### Changes
 * Convert `geoipget` from Bash to Ruby
 
 ## 0.2.4
 
-#### Changes
+### Changes
 * Use Bash for `geoipget` to prevent problems with `/bin/sh` diversity
 
 ## 0.2.3
 
-#### Additions
+### Additions
 * `geoipget` shell script
 
 ## 0.2.2
 
-#### Changes
+### Changes
 * Update to Ruby 3.4
 
 ## 0.2.1
 
-#### Fixes
+### Fixes
 
 * Fix paths on conditional requires
 * Renew certificate
 
 ## 0.2.0
 
-#### Changes
+### Changes
 
 * Determine real client IP
 * Drop autoload and put filters in proper namespace
 
 ## 0.1.0
 
-#### Initial implementation
+### Initial implementation
 
 * UserAgent filter
 * Country filter

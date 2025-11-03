@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+### Fixes
+* Correctly include details in warnings (i.e. country code)
 
 ## 0.4.0
 

@@ -41,11 +41,11 @@ end
 Integer.infect_an_assertion :assert_equals_status, :must_equal_status
 String.infect_an_assertion :assert_equals_text, :must_equal_text
 
-$warning_counter = 0
+$warnings = []
 module WarningFilter
   def warn(message)
     if message.match?(/^rack-dedos:/)
-      $warning_counter += 1
+      $warnings << message.chomp
     else
       super
     end

@@ -8,7 +8,7 @@ require_relative '../../../../spec_helper'
 describe Rack::Dedos::Filters::Country do
   before do
     Rack::Dedos.config.clear
-    $warning_counter = 0
+    $warnings = []
   end
 
   let :maxmind_dir do
@@ -78,7 +78,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:CH]))
-        _($warning_counter).must_be :zero?
+        _($warnings).must_be :none?
       end
 
       it "allows requests from countries on the allowed list" do
@@ -109,7 +109,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:CH]))
-        _($warning_counter).must_be :zero?
+        _($warnings).must_be :none?
       end
 
       it "allows requests from countries not on the denied list" do
@@ -141,7 +141,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:AT]))
-        _($warning_counter).must_be :zero?
+        _($warnings).must_be :none?
       end
 
       it "gives precedence to the allowed countries list" do

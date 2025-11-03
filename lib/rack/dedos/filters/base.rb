@@ -12,12 +12,14 @@ module Rack
 
         attr_reader :app
         attr_reader :options
+        attr_reader :details
 
         # @param app [#call]
         # @param options [Hash{Symbol => Object}]
         def initialize(app, options = {})
           @app = app
           @options = DEFAULT_OPTIONS.merge(options)
+          @details = nil
         end
 
         def call(env)
@@ -26,7 +28,8 @@ module Rack
           if allowed?(request, ip)
             app.call(env)
           else
-            warn("rack-dedos: request from #{ip} blocked by #{self.class} `#{@country_code.inspect}'")
+            message = "rack-dedos: request from #{ip} blocked by #{self.class}"
+            warn([message, details].compact.join(": "))
             [options[:status], { 'Content-Type' => 'text/plain' }, [options[:text]]]
           end
         end

@@ -5,6 +5,7 @@ require_relative '../../../../spec_helper'
 describe Rack::Dedos::Filters::Base do
   module Forbidden
     def allowed?(*)
+      @details = 'forbidden'
       false
     end
   end
@@ -22,12 +23,17 @@ describe Rack::Dedos::Filters::Base do
       _(subject.new(factory.app).call(factory.env('10.0.0.1'))).must_equal_text "Forbidden (Temporarily Blocked by Rules)"
     end
 
-    it "respons with custom status" do
+    it "responds with custom status" do
       _(subject.new(factory.app, status: 503).call(factory.env('10.0.0.1'))).must_equal_status 503
     end
 
     it "responds with generic body by default" do
       _(subject.new(factory.app, text: "Bugger off").call(factory.env('10.0.0.1'))).must_equal_text "Bugger off"
+    end
+
+    it "logs a warning with details" do
+      subject.new(factory.app).call(factory.env('10.0.0.1'))
+      _($warnings.first).must_equal 'rack-dedos: request from 10.0.0.1 blocked by Rack::Dedos::Filters::Base: forbidden'
     end
   end
 

@@ -10,6 +10,11 @@ describe Rack::Dedos::Filters::Base do
     end
   end
 
+  before do
+    Rack::Dedos.config.clear
+    $warnings = []
+  end
+
   subject do
     Rack::Dedos::Filters::Base.include Forbidden
   end

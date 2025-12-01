@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+### Additions
+* Include the requested URL in warnings
 
 ## 0.4.1
 

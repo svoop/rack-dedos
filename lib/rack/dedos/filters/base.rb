@@ -28,7 +28,7 @@ module Rack
           if allowed?(request, ip)
             app.call(env)
           else
-            message = "rack-dedos: request from #{ip} blocked by #{self.class}"
+            message = "rack-dedos: request #{request.path} from #{ip} blocked by #{self.class}"
             warn([message, details].compact.join(": "))
             [options[:status], { 'Content-Type' => 'text/plain' }, [options[:text]]]
           end

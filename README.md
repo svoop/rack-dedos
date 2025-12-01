@@ -94,11 +94,11 @@ Given the drastic nature of the filters, you should use this middleware for prod
 
 ### Request
 
-By default, filters are applied to all request paths. You can norrow this to only certain request paths:
+By default, filters are applied to all request paths. You can norrow this to only certain matching request paths:
 
 ```ruby
 use Rack::Dedos,
-  only_paths: [%r(^/search), %r(%r(\.xml)$)]
+  only_paths: [%r(^/search), %r(\.xml$)]
 
 use Rack::Dedos,
   except_paths: [%r(^/$)]

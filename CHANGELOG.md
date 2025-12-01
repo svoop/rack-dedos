@@ -1,5 +1,8 @@
 ## Main
 
+### Changes
+* Use [BreakVer](https://www.taoensso.com/break-versioning) from this point forward
+
 ### Additions
 * Include the requested URL in warnings
 * Add `only_paths` and `except_paths` options

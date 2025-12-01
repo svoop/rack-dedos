@@ -31,6 +31,8 @@ And then install the bundle:
 bundle install
 ```
 
+⚠️ This gem initially followed [SemVer](https://semver.org) loosely but transitioned to [BreakVer](https://www.taoensso.com/break-versioning) starting from version 0.4.2 onwards.
+
 ### Rackup
 
 ```ruby

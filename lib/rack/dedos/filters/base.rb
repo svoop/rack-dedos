@@ -6,9 +6,11 @@ module Rack
       class Base
 
         DEFAULT_OPTIONS = {
+          only_paths: [],
+          except_paths: [],
           status: 403,
           text: 'Forbidden (Temporarily Blocked by Rules)'
-        }
+        }.freeze
 
         attr_reader :app
         attr_reader :options
@@ -25,7 +27,7 @@ module Rack
         def call(env)
           request = Rack::Request.new(env)
           ip = real_ip(request)
-          if allowed?(request, ip)
+          if !apply?(request) || allowed?(request, ip)
             app.call(env)
           else
             message = "rack-dedos: request #{request.path} from #{ip} blocked by #{self.class}"
@@ -38,6 +40,12 @@ module Rack
 
         def config
           Rack::Dedos.config
+        end
+
+        def apply?(request)
+          return false if @options[:except_paths].any? { request.path.match? _1 }
+          return true if @options[:only_paths].none?
+          @options[:only_paths].any? { request.path.match? _1 }
         end
 
         # Get the real IP of the client

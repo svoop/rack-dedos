@@ -31,21 +31,6 @@ And then install the bundle:
 bundle install
 ```
 
-## Configuration
-
-Given the drastic nature of the filters, you should use this middleware for production environments only and/or if an environment variable like `UNDER_ATTACK` is set to true.
-
-### Rails
-
-```ruby
-# config/application.rb
-class Application < Rails::Application
-  if Rails.env.production? && ActiveModel::Type::Boolean.new.cast(ENV['UNDER_ATTACK'])
-    config.middleware.use Rack::Dedos
-  end
-end
-```
-
 ### Rackup
 
 ```ruby
@@ -58,6 +43,37 @@ end
 
 run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 ```
+
+### Rails
+
+```ruby
+# config/application.rb
+class Application < Rails::Application
+  if Rails.env.production? && ActiveModel::Type::Boolean.new.cast(ENV['UNDER_ATTACK'])
+    config.middleware.use Rack::Dedos
+  end
+end
+```
+
+## Configuration
+
+Given the drastic nature of the filters, you should use this middleware for production environments only and/or if an environment variable like `UNDER_ATTACK` is set to true.
+
+### Request
+
+By default, filters are applied to all request paths. You can norrow this to only certain request paths:
+
+```ruby
+use Rack::Dedos,
+  only_paths: [%r(^/search), %r(%r(\.xml)$)]
+
+use Rack::Dedos,
+  except_paths: [%r(^/$)]
+```
+
+If you set both `only_paths` and `except_paths`, the latter take precedence.
+
+⚠️ The request path does not include GET parameters.
 
 ### Response
 

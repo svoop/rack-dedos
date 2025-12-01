@@ -2,6 +2,7 @@
 
 ### Additions
 * Include the requested URL in warnings
+* Add `only_paths` and `except_paths` options
 
 ## 0.4.1
 

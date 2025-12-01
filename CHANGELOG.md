@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.4.2
+
 ### Changes
 * Use [BreakVer](https://www.taoensso.com/break-versioning) from this point forward
 

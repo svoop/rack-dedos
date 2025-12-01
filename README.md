@@ -33,6 +33,10 @@ bundle install
 
 ⚠️ This gem initially followed [SemVer](https://semver.org) loosely but transitioned to [BreakVer](https://www.taoensso.com/break-versioning) starting from version 0.4.2 onwards.
 
+## Usage
+
+You should use an environment variable such as `UNDER_ATTACK` to enable Rack::Dedos only when your app is actually under attack.
+
 ### Rackup
 
 ```ruby
@@ -46,10 +50,37 @@ end
 run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 ```
 
+### Hanami
+
+```ruby
+# config/settings.rb
+
+module MyApp
+  class Settings < Hanami::Settings
+    setting :under_attack, default: false, constructor: Types::Params::Bool
+  end
+end
+```
+
+```ruby
+# config/app.rb
+
+module MyApp
+  class App < Hanami::App
+    environment(:production) do
+      if setting.under_attack
+        middleware.use Rack::Dedos
+      end
+    end
+  end
+end
+```
+
 ### Rails
 
 ```ruby
 # config/application.rb
+
 class Application < Rails::Application
   if Rails.env.production? && ActiveModel::Type::Boolean.new.cast(ENV['UNDER_ATTACK'])
     config.middleware.use Rack::Dedos

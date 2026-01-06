@@ -7,6 +7,10 @@ module Rack
     module Filters
       class Country < Base
 
+        def name
+          :country
+        end
+
         # @option options [String] :maxmind_db_file MaxMind database file
         # @option options [Symbol, Array<Symbol>] :allowed_countries ISO 3166-1 alpha 2
         # @option options [Symbol, Array<Symbol>] :denied_countries ISO 3166-1 alpha 2

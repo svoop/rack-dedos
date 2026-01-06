@@ -5,6 +5,10 @@ module Rack
     module Filters
       class UserAgent < Base
 
+        def name
+          :user_agent
+        end
+
         # @option options [String] :cache_url URL of the cache backend
         # @option options [Integer] :cache_period how long to retain cached IP
         #   addresses in seconds (default: 900)

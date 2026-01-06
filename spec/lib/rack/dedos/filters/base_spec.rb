@@ -10,6 +10,10 @@ describe Rack::Dedos::Filters::Base do
 
   context "Forbidden" do
     module Forbidden
+      def name
+        :forbidden
+      end
+
       def allowed?(*)
         @details = 'forbidden'
         false
@@ -17,7 +21,7 @@ describe Rack::Dedos::Filters::Base do
     end
 
     subject do
-      Rack::Dedos::Filters::Base.include Forbidden
+      Rack::Dedos::Filters::Base.dup.include Forbidden
     end
 
     describe :call do
@@ -39,7 +43,7 @@ describe Rack::Dedos::Filters::Base do
 
       it "logs a warning with details" do
         subject.new(factory.app).call(factory.env('10.0.0.1'))
-        _($warnings.first).must_equal 'rack-dedos: request / from 10.0.0.1 blocked by Rack::Dedos::Filters::Base: forbidden'
+        _($warnings.first).must_equal 'rack-dedos: request / from 10.0.0.1 blocked by forbidden: forbidden'
       end
 
       it "succeeds if except_paths match" do
@@ -81,13 +85,17 @@ describe Rack::Dedos::Filters::Base do
 
   context "Allowed" do
     module Allowed
+      def name
+        :allowed
+      end
+
       def allowed?(*)
         true
       end
     end
 
     subject do
-      Rack::Dedos::Filters::Base.include Allowed
+      Rack::Dedos::Filters::Base.dup.include Allowed
     end
 
     describe :call do

@@ -11,6 +11,7 @@ require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos')
 require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'country')
 require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'user_agent')
 
+require 'minitest/mock'
 require 'minitest/flash'
 require 'minitest/focus'
 
@@ -38,8 +39,10 @@ module Minitest::Assertions
   end
 end
 
-Integer.infect_an_assertion :assert_equals_status, :must_equal_status
-String.infect_an_assertion :assert_equals_text, :must_equal_text
+module Minitest::Expectations
+  infect_an_assertion :assert_equals_status, :must_equal_status
+  infect_an_assertion :assert_equals_text,  :must_equal_text
+end
 
 $warnings = []
 module WarningFilter

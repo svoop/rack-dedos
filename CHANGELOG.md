@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+### Changes
+* Require Minitest >= 6
 
 ## 0.4.2
 

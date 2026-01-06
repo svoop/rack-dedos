@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.5.0
+
 ### Changes
 * Update to Ruby 4.0
 * Require Minitest >= 6

@@ -13,7 +13,6 @@ require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'user_ag
 
 require 'minitest/mock'
 require 'minitest/flash'
-require 'minitest/focus'
 
 require Pathname(__dir__).join('factory')
 

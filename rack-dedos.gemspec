@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
 
   spec.extra_rdoc_files = Dir['README.md', 'CHANGELOG.md', 'LICENSE.txt']
   spec.rdoc_options    += [
-    '--title', 'AIXM/OFMX Builder',
+    '--title', 'Rack::Dedos',
     '--main', 'README.md',
     '--line-numbers',
     '--inline-source',

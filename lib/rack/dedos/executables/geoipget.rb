@@ -3,6 +3,7 @@
 require 'optparse'
 require 'tmpdir'
 require 'open-uri'
+require 'zlib'
 require 'json'
 require 'rubygems/package'
 
@@ -58,7 +59,7 @@ module Rack
           private
 
           def latest_version
-            URI("https://api.github.com/repos/#{REPO}/releases/latest")
+            @latest_version ||= URI("https://api.github.com/repos/#{REPO}/releases/latest")
               .read
               .then { JSON.parse(_1) }
               .fetch('tag_name')
@@ -68,20 +69,21 @@ module Rack
           def prepare(version)
             uri = URI("https://github.com/#{REPO}/releases/download/v#{version}/geoipupdate_#{version}_#{arch}.tar.gz")
             Dir.mktmpdir do |tmp|
-              Dir.chdir tmp
-              uri.open do |file|
-                Zlib::GzipReader.wrap(file) do |gz|
-                  Gem::Package::TarReader.new(gz) do |tar|
-                    tar.each do |entry|
-                      if entry.full_name.match? %r(/geoipupdate$)
-                        ::File.write('geoipupdate', entry.read)
+              Dir.chdir(tmp) do
+                uri.open do |file|
+                  Zlib::GzipReader.wrap(file) do |gz|
+                    Gem::Package::TarReader.new(gz) do |tar|
+                      tar.each do |entry|
+                        if entry.full_name.match? %r(/geoipupdate$)
+                          ::File.write('geoipupdate', entry.read)
+                        end
                       end
                     end
                   end
                 end
+                ::File.chmod(0755, 'geoipupdate')
+                yield
               end
-              ::File.chmod(0755, 'geoipupdate')
-              yield
             end
           ensure
             lockfile = "#{dir}/.geoipupdate.lock"

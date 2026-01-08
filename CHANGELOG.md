@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.5.1
+
 ### Fixes
 * Fix getcwd errors due to unlinked tmpdir
 

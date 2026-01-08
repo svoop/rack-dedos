@@ -16,6 +16,8 @@ require 'minitest/flash'
 
 require Pathname(__dir__).join('factory')
 
+Minitest.load_plugins
+
 class Minitest::Spec
   class << self
     alias_method :context, :describe

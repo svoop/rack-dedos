@@ -2,19 +2,17 @@
 
 gem 'minitest'
 
-require 'debug'
 require 'pathname'
 
 require 'minitest/autorun'
-require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos')
+require_relative '../lib/rack/dedos'
 
-require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'country')
-require Pathname(__dir__).join('..', 'lib', 'rack', 'dedos', 'filters', 'user_agent')
+require_relative '../lib/rack/dedos/filters/country'
+require_relative '../lib/rack/dedos/filters/user_agent'
 
 require 'minitest/mock'
-require 'minitest/flash'
 
-require Pathname(__dir__).join('factory')
+require_relative 'factory'
 
 Minitest.load_plugins
 

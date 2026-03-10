@@ -45,16 +45,11 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.7.0"
 
-  spec.add_runtime_dependency 'rack', '>= 2.2.0'
+  spec.add_dependency 'rack', '>= 2.2.0'
 
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'redis'
   spec.add_development_dependency 'maxmind-db'
-  spec.add_development_dependency 'debug'
-  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'minitest', '>= 6.0.0'
   spec.add_development_dependency 'minitest-mock'
-  spec.add_development_dependency 'minitest-flash'
-  spec.add_development_dependency 'guard'
-  spec.add_development_dependency 'guard-minitest'
-  spec.add_development_dependency 'yard'
 end

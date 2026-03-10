@@ -199,12 +199,19 @@ cd rack-dedos
 git submodule update --init
 ```
 
-To install the development dependencies and then run the test suite:
+To install only the development dependencies:
 
 ```
 bundle install
-bundle exec rake    # run tests once
-bundle exec guard   # run tests whenever files are modified
+bundle exec rake   # run the tests once
+```
+
+To install the development dependencies and development tools (such as guard):
+
+```
+bundle config set --local with toolbox
+bundle install
+bundle exec guard   # run the tests whenever files are modified
 ```
 
 You're welcome to [submit issues](https://github.com/svoop/rack-dedos/issues) and contribute code by [forking the project and submitting pull requests](https://docs.github.com/en/get-started/quickstart/fork-a-repo).

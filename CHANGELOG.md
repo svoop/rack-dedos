@@ -1,6 +1,11 @@
 ## Main
 
-Nothing so far
+### Breaking changes
+* Log to STDOUT (instead of STDERR) by default
+
+### Additions
+* Suppport custom loggers
+* Optionally log request headers
 
 ## 0.5.1
 

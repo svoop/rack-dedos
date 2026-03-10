@@ -12,7 +12,7 @@ module Rack
         # @option options [String] :cache_url URL of the cache backend
         # @option options [Integer] :cache_period how long to retain cached IP
         #   addresses in seconds (default: 900)
-        def initialize(*)
+        def initialize(...)
           super
           @cache_url = options[:cache_url] or fail "cache URL not set"
           @cache_period = options[:cache_period] || 900
@@ -34,7 +34,7 @@ module Rack
             false
           end
         rescue => error
-          warn("rack-dedos: request from #{ip} allowed due to error: #{error.message}")
+          logger.error("request from #{ip} allowed due to error: #{error.message}")
           true
         end
 

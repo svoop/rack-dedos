@@ -13,6 +13,8 @@ require_relative '../lib/rack/dedos/filters/user_agent'
 require 'minitest/mock'
 
 require_relative 'factory'
+require_relative 'test_log'
+$test_log = TestLog.new
 
 Minitest.load_plugins
 
@@ -42,15 +44,3 @@ module Minitest::Expectations
   infect_an_assertion :assert_equals_status, :must_equal_status
   infect_an_assertion :assert_equals_text,  :must_equal_text
 end
-
-$warnings = []
-module WarningFilter
-  def warn(message)
-    if message.match?(/^rack-dedos:/)
-      $warnings << message.chomp
-    else
-      super
-    end
-  end
-end
-Warning.extend WarningFilter

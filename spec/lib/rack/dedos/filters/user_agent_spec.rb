@@ -5,19 +5,19 @@ require_relative '../../../../spec_helper'
 describe Rack::Dedos::Filters::UserAgent do
   before do
     Rack::Dedos.config.clear
-    $warnings = []
   end
 
   describe :allowed? do
     subject do
       Rack::Dedos::Filters::UserAgent.new(factory.app,
+        logger: $test_log.clear.logger,
         cache_url: 'hash'
       )
     end
 
     it "doesn't enter the rescue fallback" do
       subject.call(factory.env('10.0.0.1', 'firefox'))
-      _($warnings).must_be :none?
+      _($test_log.read).must_be :empty?
     end
 
     it "allows the request on first contact" do

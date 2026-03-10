@@ -8,7 +8,6 @@ require_relative '../../../../spec_helper'
 describe Rack::Dedos::Filters::Country do
   before do
     Rack::Dedos.config.clear
-    $warnings = []
   end
 
   let :maxmind_dir do
@@ -18,6 +17,7 @@ describe Rack::Dedos::Filters::Country do
   describe :initialize do
     subject do
       Rack::Dedos::Filters::Country.new(factory.app,
+        logger: $test_log.clear.logger,
         maxmind_db_file: maxmind_db_file,
         allowed_countries: %i(CH AT)
       )
@@ -66,6 +66,7 @@ describe Rack::Dedos::Filters::Country do
     context "allowed_countries set" do
       subject do
         Rack::Dedos::Filters::Country.new(factory.app,
+          logger: $test_log.clear.logger,
           maxmind_db_file: maxmind_db_file,
           allowed_countries: %i(CH AT)
         )
@@ -78,7 +79,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:CH]))
-        _($warnings).must_be :none?
+        _($test_log.read).must_be :empty?
       end
 
       it "allows requests from countries on the allowed list" do
@@ -97,6 +98,7 @@ describe Rack::Dedos::Filters::Country do
     context "denied_countries set" do
       subject do
         Rack::Dedos::Filters::Country.new(factory.app,
+          logger: $test_log.clear.logger,
           maxmind_db_file: maxmind_db_file,
           denied_countries: %i(RU)
         )
@@ -109,7 +111,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:CH]))
-        _($warnings).must_be :none?
+        _($test_log.read).must_be :empty?
       end
 
       it "allows requests from countries not on the denied list" do
@@ -128,6 +130,7 @@ describe Rack::Dedos::Filters::Country do
     context "both allowed_countries and denied_countries set" do
       subject do
         Rack::Dedos::Filters::Country.new(factory.app,
+          logger: $test_log.clear.logger,
           maxmind_db_file: maxmind_db_file,
           allowed_countries: %i(CH AT),
           denied_countries: %i(RU AT)
@@ -141,7 +144,7 @@ describe Rack::Dedos::Filters::Country do
 
       it "doesn't enter the rescue fallback otherwise" do
         subject.call(factory.env(ips[:AT]))
-        _($warnings).must_be :none?
+        _($test_log.read).must_be :empty?
       end
 
       it "gives precedence to the allowed countries list" do

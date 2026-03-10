@@ -122,6 +122,26 @@ use Rack::Dedos,
   text: "Temporary Server Error"
 ```
 
+### Log
+
+By default, blocked request are logged as info to `$stdout` such as:
+
+> rack-dedos: request /foobar from 1.2.3.4 blocked by Rack::Dedos::Filters::Country: CN
+
+The level of details may differ by filter, however, if you want to drill down and log additional request headers, you can configure which headers to include as follows:
+
+```ruby
+use Rack::Dedos,
+  headers: ['HTTP_USER_AGENT', 'HTTP_REFERER']
+```
+
+Also, you can direct the log stream to any logger object you wish:
+
+```ruby
+use Rack::Dedos,
+  logger: Logger.new('/var/log/rack-dedos.log')
+```
+
 ## Filters
 
 By default, all filters described below are applied. You can exclude certain filters:

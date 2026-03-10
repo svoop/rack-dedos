@@ -5,7 +5,6 @@ require_relative '../../../../spec_helper'
 describe Rack::Dedos::Filters::Base do
   before do
     Rack::Dedos.config.clear
-    $warnings = []
   end
 
   context "Forbidden" do
@@ -15,7 +14,7 @@ describe Rack::Dedos::Filters::Base do
       end
 
       def allowed?(*)
-        @details = 'forbidden'
+        @details = 'forbidden details'
         false
       end
     end
@@ -24,61 +23,70 @@ describe Rack::Dedos::Filters::Base do
       Rack::Dedos::Filters::Base.dup.include Forbidden
     end
 
+    let :logger do
+      $test_log.clear.logger
+    end
+
     describe :call do
       it "responds with status 403 by default" do
-        _(subject.new(factory.app).call(factory.env('10.0.0.1'))).must_equal_status 403
+        _(subject.new(factory.app, logger:).call(factory.env('10.0.0.1'))).must_equal_status 403
       end
 
       it "responds with generic body by default" do
-        _(subject.new(factory.app).call(factory.env('10.0.0.1'))).must_equal_text "Forbidden (Temporarily Blocked by Rules)"
+        _(subject.new(factory.app, logger:).call(factory.env('10.0.0.1'))).must_equal_text "Forbidden (Temporarily Blocked by Rules)"
       end
 
       it "responds with custom status" do
-        _(subject.new(factory.app, status: 503).call(factory.env('10.0.0.1'))).must_equal_status 503
+        _(subject.new(factory.app, logger:, status: 503).call(factory.env('10.0.0.1'))).must_equal_status 503
       end
 
       it "responds with generic body by default" do
-        _(subject.new(factory.app, text: "Bugger off").call(factory.env('10.0.0.1'))).must_equal_text "Bugger off"
+        _(subject.new(factory.app, logger:, text: "Bugger off").call(factory.env('10.0.0.1'))).must_equal_text "Bugger off"
       end
 
-      it "logs a warning with details" do
-        subject.new(factory.app).call(factory.env('10.0.0.1'))
-        _($warnings.first).must_equal 'rack-dedos: request / from 10.0.0.1 blocked by forbidden: forbidden'
+      it "logs an info with details" do
+        subject.new(factory.app, logger:).call(factory.env('10.0.0.1'))
+        _($test_log.read).must_equal "INFO -- request / from 10.0.0.1 blocked by forbidden\nforbidden details"
+      end
+
+      it "logs custom headers" do
+        subject.new(factory.app, logger:, headers: ['HTTP_USER_AGENT']).call(factory.env('10.0.0.1'))
+        _($test_log.read).must_equal %Q(INFO -- request / from 10.0.0.1 blocked by forbidden\nforbidden details\nHTTP_USER_AGENT="firefox")
       end
 
       it "succeeds if except_paths match" do
         except_paths = [%r(^/foo$), %r(^/$)]
-        _(subject.new(factory.app, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
+        _(subject.new(factory.app, logger:, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
       end
 
       it "blocks if except_paths don't match" do
         except_paths = [%r(^/foo$),%r(^/bar$)]
-        _(subject.new(factory.app, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
+        _(subject.new(factory.app, logger:, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
       end
 
       it "blocks if except_paths are empty" do
         except_paths = []
-        _(subject.new(factory.app, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
+        _(subject.new(factory.app, logger:, except_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
       end
 
       it "succeeds if only_paths don't match" do
         only_paths = [%r(^/foo$)]
-        _(subject.new(factory.app, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
+        _(subject.new(factory.app, logger:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
       end
 
       it "blocks if only_paths are empty" do
         only_paths = []
-        _(subject.new(factory.app, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
+        _(subject.new(factory.app, logger:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
       end
 
       it "succeds if except_paths conflict with only_paths" do
         except_paths = only_paths = [%r(^/$)]
-        _(subject.new(factory.app, except_paths:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
+        _(subject.new(factory.app, logger:, except_paths:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 200
       end
 
       it "blocks if except_paths and only_paths are empty" do
         except_paths = only_paths = []
-        _(subject.new(factory.app, except_paths:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
+        _(subject.new(factory.app, logger:, except_paths:, only_paths:).call(factory.env('10.0.0.1'))).must_equal_status 403
       end
     end
   end

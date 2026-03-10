@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 module Rack
   module Dedos
     module Filters
@@ -9,17 +11,20 @@ module Rack
           only_paths: [],
           except_paths: [],
           status: 403,
-          text: 'Forbidden (Temporarily Blocked by Rules)'
+          text: 'Forbidden (Temporarily Blocked by Rules)',
+          headers: []
         }.freeze
 
         attr_reader :app
+        attr_reader :logger
         attr_reader :options
         attr_reader :details
 
         # @param app [#call]
         # @param options [Hash{Symbol => Object}]
-        def initialize(app, options = {})
+        def initialize(app, logger: nil, **options)
           @app = app
+          @logger = logger || Logger.new($stdout, progname: 'rack-dedos')
           @options = DEFAULT_OPTIONS.merge(options)
           @details = nil
         end
@@ -30,8 +35,13 @@ module Rack
           if !apply?(request) || allowed?(request, ip)
             app.call(env)
           else
-            message = "rack-dedos: request #{request.path} from #{ip} blocked by #{name}"
-            warn([message, details].compact.join(": "))
+            logger.info(
+              [
+                "request #{request.path} from #{ip} blocked by #{name}",
+                details,
+                (headers(request) if options[:headers]&.any?)
+              ].compact.join("\n")
+            )
             [options[:status], { 'Content-Type' => 'text/plain' }, [options[:text]]]
           end
         end
@@ -69,6 +79,12 @@ module Rack
           else
             request.ip
           end
+        end
+
+        def headers(request)
+          options[:headers].map do |header|
+            "#{header}=#{request.get_header(header).inspect}"
+          end.join(', ')
         end
 
       end

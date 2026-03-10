@@ -14,7 +14,7 @@ module Rack
         # @option options [String] :maxmind_db_file MaxMind database file
         # @option options [Symbol, Array<Symbol>] :allowed_countries ISO 3166-1 alpha 2
         # @option options [Symbol, Array<Symbol>] :denied_countries ISO 3166-1 alpha 2
-        def initialize(*)
+        def initialize(...)
           super
           @maxmind_db_file = options[:maxmind_db_file] or fail "MaxMind database file not set"
           @allowed = case
@@ -26,14 +26,14 @@ module Rack
         end
 
         def allowed?(request, ip)
-          if country = maxmind_db&.get(ip)
-            country_code = @details = country.dig('country', 'iso_code').to_sym
+          if db = maxmind_db&.get(ip)
+            country_code = @details = db.dig('country', 'iso_code').to_sym
             @countries.include?(country_code) ? @allowed : !@allowed
           else   # not found in database
             true
           end
         rescue => error
-          warn("rack-dedos: request from #{ip} allowed due to error: #{error.message}")
+          logger.error("request from #{ip} allowed due to error: #{error.message}")
           true
         end
 

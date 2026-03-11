@@ -8,6 +8,7 @@ module Rack
       class Base
 
         DEFAULT_OPTIONS = {
+          logger: nil,
           only_paths: [],
           except_paths: [],
           status: 403,
@@ -16,15 +17,13 @@ module Rack
         }.freeze
 
         attr_reader :app
-        attr_reader :logger
         attr_reader :options
         attr_reader :details
 
         # @param app [#call]
         # @param options [Hash{Symbol => Object}]
-        def initialize(app, logger: nil, **options)
+        def initialize(app, options={})
           @app = app
-          @logger = logger || Logger.new($stdout, progname: 'rack-dedos')
           @options = DEFAULT_OPTIONS.merge(options)
           @details = nil
         end
@@ -50,6 +49,10 @@ module Rack
 
         def config
           Rack::Dedos.config
+        end
+
+        def logger
+          @logger ||= options[:logger] || Logger.new($stdout, progname: 'rack-dedos')
         end
 
         def apply?(request)

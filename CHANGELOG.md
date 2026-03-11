@@ -1,8 +1,9 @@
 ## Main
 
-Nothing so far
+### Fixes
+* Drop keyword arguments for Rack compatibility
 
-## 0.6.0
+## 0.6.0 (yanked)
 
 ### Breaking changes
 * Log to STDOUT (instead of STDERR) by default

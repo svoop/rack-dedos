@@ -135,11 +135,18 @@ use Rack::Dedos,
   headers: ['HTTP_USER_AGENT', 'HTTP_REFERER']
 ```
 
-Also, you can direct the log stream to any logger object you wish:
+You can direct the log stream to any logger object you wish:
 
 ```ruby
 use Rack::Dedos,
   logger: Logger.new('/var/log/rack-dedos.log')
+```
+
+Or disable logging entirely:
+
+```ruby
+use Rack::Dedos,
+  logger: Logger.new(nil)
 ```
 
 ## Filters

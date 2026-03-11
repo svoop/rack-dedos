@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.6.0
+
 ### Breaking changes
 * Log to STDOUT (instead of STDERR) by default
 

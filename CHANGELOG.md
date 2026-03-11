@@ -1,5 +1,9 @@
 ## Main
 
+Nothing so far
+
+## 0.7.0
+
 ### Breaking changes
 * Change format of country code details in log
 

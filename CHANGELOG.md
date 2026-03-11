@@ -5,6 +5,7 @@
 
 ### Fixes
 * Drop keyword arguments for Rack compatibility
+* Fix collision with Rack::Logger
 
 ## 0.6.0 (yanked)
 

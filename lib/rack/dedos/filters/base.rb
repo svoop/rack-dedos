@@ -47,7 +47,7 @@ module Rack
         end
 
         def logger
-          @logger ||= options[:logger] || Logger.new($stdout, progname: 'rack-dedos')
+          @logger ||= options[:logger] || ::Logger.new($stdout, progname: 'rack-dedos')
         end
 
         def apply?(request)

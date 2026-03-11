@@ -16,16 +16,14 @@ module Rack
           headers: []
         }.freeze
 
-        attr_reader :app
-        attr_reader :options
-        attr_reader :details
+        attr_reader :app, :options, :details
 
         # @param app [#call]
         # @param options [Hash{Symbol => Object}]
         def initialize(app, options={})
           @app = app
           @options = DEFAULT_OPTIONS.merge(options)
-          @details = nil
+          @details = {}
         end
 
         def call(env)
@@ -34,13 +32,10 @@ module Rack
           if !apply?(request) || allowed?(request, ip)
             app.call(env)
           else
-            logger.info(
-              [
-                "request #{request.path} from #{ip} blocked by #{name}",
-                details,
-                (headers(request) if options[:headers]&.any?)
-              ].compact.join("\n")
-            )
+            message = ["request #{request.path} from #{ip} blocked by #{name}"]
+            message += details_list
+            message += headers_list(request)
+            logger.info(message.join(' '))
             [options[:status], { 'Content-Type' => 'text/plain' }, [options[:text]]]
           end
         end
@@ -84,12 +79,17 @@ module Rack
           end
         end
 
-        def headers(request)
-          options[:headers].map do |header|
-            "#{header}=#{request.get_header(header).inspect}"
-          end.join(', ')
+        def details_list
+          details.map do |key, value|
+            "#{key.upcase}=#{value.inspect}"
+          end
         end
 
+        def headers_list(request)
+          options[:headers].map do |header|
+            "#{header.upcase}=#{request.get_header(header).inspect}"
+          end
+        end
       end
     end
   end

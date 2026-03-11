@@ -14,7 +14,7 @@ describe Rack::Dedos::Filters::Base do
       end
 
       def allowed?(*)
-        @details = 'forbidden details'
+        details[:cause] = 'spec'
         false
       end
     end
@@ -46,12 +46,12 @@ describe Rack::Dedos::Filters::Base do
 
       it "logs an info with details" do
         subject.new(factory.app, logger:).call(factory.env('10.0.0.1'))
-        _($test_log.read).must_equal "INFO -- request / from 10.0.0.1 blocked by forbidden\nforbidden details"
+        _($test_log.read).must_equal 'INFO -- request / from 10.0.0.1 blocked by forbidden CAUSE="spec"'
       end
 
       it "logs custom headers" do
         subject.new(factory.app, logger:, headers: ['HTTP_USER_AGENT']).call(factory.env('10.0.0.1'))
-        _($test_log.read).must_equal %Q(INFO -- request / from 10.0.0.1 blocked by forbidden\nforbidden details\nHTTP_USER_AGENT="firefox")
+        _($test_log.read).must_equal 'INFO -- request / from 10.0.0.1 blocked by forbidden CAUSE="spec" HTTP_USER_AGENT="firefox"'
       end
 
       it "succeeds if except_paths match" do

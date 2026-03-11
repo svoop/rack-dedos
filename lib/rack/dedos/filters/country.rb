@@ -27,8 +27,8 @@ module Rack
 
         def allowed?(request, ip)
           if db = maxmind_db&.get(ip)
-            country_code = @details = db.dig('country', 'iso_code').to_sym
-            @countries.include?(country_code) ? @allowed : !@allowed
+            details[:country_code] = db.dig('country', 'iso_code').to_sym
+            @countries.include?(details[:country_code]) ? @allowed : !@allowed
           else   # not found in database
             true
           end

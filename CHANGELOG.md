@@ -1,5 +1,8 @@
 ## Main
 
+### Breaking changes
+* Change format of country code details in log
+
 ### Fixes
 * Drop keyword arguments for Rack compatibility
 

@@ -8,6 +8,7 @@ require 'minitest/autorun'
 require_relative '../lib/rack/dedos'
 
 require_relative '../lib/rack/dedos/filters/country'
+require_relative '../lib/rack/dedos/filters/spamhaus'
 require_relative '../lib/rack/dedos/filters/user_agent'
 
 require 'minitest/mock'

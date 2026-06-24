@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+### Additions
+* Spamhaus filter
 
 ## 0.7.1
 

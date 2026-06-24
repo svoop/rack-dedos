@@ -200,6 +200,14 @@ geoipget --help
 geoipget --dir . --arch linux_amd64 /etc/geoipupdate.conf
 ```
 
+### Spamhaus Filter
+
+```ruby
+use Rack::Dedos::Filters::Spamhaus
+```
+
+Deny requests from IP addresses which are listed on the [Spamhaus ZEN Blocklist](https://www.spamhaus.org/blocklists/zen-blocklist/).
+
 ## Real Client IP
 
 A word on how the real client IP is determined. Both Rack 2 and Rack 3 (up to 3.0.7 at the time of writing) may populate the request `ip` incorrectly. Here's what a minimalistic Rack app deloyed to Render (behind Cloudflare) reports:

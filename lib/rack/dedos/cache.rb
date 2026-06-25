@@ -4,30 +4,27 @@ module Rack
   module Dedos
     class Cache
 
-      def initialize(url:, expires_in: nil, key_prefix: nil)
-        @url, @expires_in = url, expires_in
-        @key_prefix = ("#{key_prefix}:" if key_prefix).to_s
+      def initialize(url:, key_prefix: nil, expires_in: 86400)
+        @url, @key_prefix, @expires_in = url, key_prefix, expires_in
         type = url.split(':').first
         extend Object.const_get("Rack::Dedos::Cache::#{type.capitalize}")
+        connect
       rescue NameError
         raise(ArgumentError, "type of cache for `#{@url}' not supported")
       end
 
       module Hash
-        def store
-          @store ||= {}
-        end
-
-        def set(key, value)
-          store[key] = [value, timestamp]
+        def set(key, value, expires_in: @expires_in)
+          expires_at = now + expires_in if expires_in
+          @store[key] = [value, expires_at]
         end
 
         def get(key)
-          if (value, created_at = store[key])
-            if !@expires_in || @expires_in >= timestamp - created_at
+          if (value, expires_at = @store[key])
+            if !expires_at || expires_at > now
               value
             else
-              store.delete(key)
+              @store.delete(key)
               nil
             end
           end
@@ -35,7 +32,11 @@ module Rack
 
         private
 
-        def timestamp
+        def connect
+          @store = {}
+        end
+
+        def now
           Time.now.to_i
         end
       end
@@ -43,16 +44,24 @@ module Rack
       module Redis
         require 'redis'
 
-        def store
-          @store ||= ::Redis.new(url: @url)
-        end
-
-        def set(key, value)
-          store.set(@key_prefix + key, value, ex: @expires_in)
+        def set(key, value, expires_in: @expires_in)
+          @store.with { _1.set(prefixed(key), value, ex: expires_in) }
         end
 
         def get(key)
-          store.get(@key_prefix + key)
+          @store.with { _1.get(prefixed(key)) }
+        end
+
+        private
+
+        def connect
+          @store = ConnectionPool.new(size: 5, timeout: 1) do
+            ::Redis.new(url: @url)
+          end
+        end
+
+        def prefixed(key)
+          @key_prefix ? "#{@key_prefix}:#{key}" : key
         end
       end
 

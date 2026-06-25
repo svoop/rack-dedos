@@ -9,6 +9,8 @@ module Rack
 
         DEFAULT_OPTIONS = {
           logger: nil,
+          cache_url: 'Hash',
+          cache_key_prefix: nil,
           only_paths: [],
           except_paths: [],
           status: 403,
@@ -16,13 +18,18 @@ module Rack
           headers: []
         }.freeze
 
-        attr_reader :app, :options, :details
+        attr_reader :app, :options, :cache, :logger, :details
 
         # @param app [#call]
         # @param options [Hash{Symbol => Object}]
         def initialize(app, options={})
           @app = app
           @options = DEFAULT_OPTIONS.merge(options)
+          @cache = Cache.new(
+            url: @options[:cache_url],
+            key_prefix: @options[:cache_key_prefix]
+          )
+          @logger ||= options[:logger] || ::Logger.new($stdout, progname: 'rack-dedos')
           @details = {}
         end
 
@@ -44,10 +51,6 @@ module Rack
 
         def config
           Rack::Dedos.config
-        end
-
-        def logger
-          @logger ||= options[:logger] || ::Logger.new($stdout, progname: 'rack-dedos')
         end
 
         def apply?(request)

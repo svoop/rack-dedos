@@ -122,6 +122,18 @@ use Rack::Dedos,
   text: "Temporary Server Error"
 ```
 
+### Cache
+
+Some filters have to persist information to a key/value store. The default implementation uses a simple Ruby `Hash`, however, this is only suitable for development. If you chose to use such filters in production, you'll want to switch to Redis instead.
+
+To do so, install the [redis gem](https://rubygems.org/gems/redis) and add the following configuration:
+
+```ruby
+use Rack::Dedos,
+  cache_url: 'redis://redis.example.com:6379/12',   # db 12 on default port
+  cache_key_prefix: 'dedos',   # key prefix for shared caches (default: nil)
+```
+
 ### Log
 
 By default, blocked request are logged as info to `$stdout` such as:
@@ -162,21 +174,18 @@ To only apply one specific filter, use the corresponding class as shown below.
 
 ### User Agent Filter
 
+⚠️ This filter uses the cache!
+
 ```ruby
 use Rack::Dedos::Filters::UserAgent,
-  cache_url: 'redis://redis.example.com:6379/12',   # db 12 on default port
-  cache_key_prefix: 'dedos',   # key prefix for shared caches (default: nil)
   cache_period: 1800   # seconds (default: 900)
 ```
 
 Requests are blocked for `cache_period` seconds in case another request has been made within `cache_period` seconds from by same IP address but with a different user agent.
 
-The following cache backends are supported:
-
-* `redis://...` – ⚠️ The [redis gem](https://rubygems.org/gems/redis) has to be installed.
-* `hash` – Only for testing, don't use this in production.
-
 ### Country Filter
+
+⚠️ This filter requires the [maxmind-db gem](https://rubygems.org/gems/maxmind-db) to be installed!
 
 ```ruby
 use Rack::Dedos::Filters::Country,
@@ -186,8 +195,6 @@ use Rack::Dedos::Filters::Country,
 ```
 
 Either allow or deny requests by probable country of origin. If both are set, the `denied_countries` option is ignored.
-
-⚠️ The [maxmind-db gem](https://rubygems.org/gems/maxmind-db) has to be installed.
 
 The MaxMind GeoLite2 database is free, however, you have to create an account on [maxmind.com](https://www.maxmind.com) and then download the country database.
 
@@ -202,6 +209,8 @@ geoipget --dir . --arch linux_amd64 /etc/geoipupdate.conf
 
 ### Spamhaus Filter
 
+⚠️ This filter uses the cache!
+
 ```ruby
 use Rack::Dedos::Filters::Spamhaus
 ```
@@ -210,7 +219,7 @@ Deny requests from IP addresses which are listed on the [Spamhaus ZEN Blocklist]
 
 ## Real Client IP
 
-A word on how the real client IP is determined. Both Rack 2 and Rack 3 (up to 3.0.7 at the time of writing) may populate the request `ip` incorrectly. Here's what a minimalistic Rack app deloyed to Render (behind Cloudflare) reports:
+A word on how the real client IP is determined: Both Rack 2 and Rack 3 (up to 3.0.7 at the time of writing) may populate the request `ip` incorrectly. Here's what a minimalistic Rack app deloyed to Render (behind Cloudflare) reports:
 
 > request.ip = 172.71.135.17<br>
 > request.forwarded_for = ["81.XXX.XXX.XXX", "172.71.135.17", "10.201.229.136"]

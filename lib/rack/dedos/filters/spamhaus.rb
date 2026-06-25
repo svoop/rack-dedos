@@ -13,22 +13,23 @@ module Rack
           :spamhaus
         end
 
+        def initialize(...)
+          super
+          @resolver = ConnectionPool.new(size: 5, timeout: 1) do
+            Resolv::DNS.new.tap { _1.timeouts = [1, 2] }
+          end
+        end
+
         def allowed?(request, ip)
-          resolver.getresources(domain_for(ip), Resolv::DNS::Resource::IN::A).empty?
+          @resolver.with do |resolver|
+            resolver.getresources(domain_for(ip), Resolv::DNS::Resource::IN::A).empty?
+          end
         rescue => error
           logger.error("request from #{ip} allowed due to error: #{error.message}")
           true
         end
 
         private
-
-        def resolver
-          Thread.current.thread_variable_get(:spamhaus_resolver) ||
-            Thread.current.thread_variable_set(
-              :spamhaus_resolver,
-              Resolv::DNS.new.tap { _1.timeouts = [1, 2] }
-            )
-        end
 
         def domain_for(ip)
           ip.split('.').reverse.join('.').concat('.', QUERY_DOMAIN)

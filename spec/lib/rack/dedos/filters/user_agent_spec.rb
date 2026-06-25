@@ -36,7 +36,7 @@ describe Rack::Dedos::Filters::UserAgent do
 
     it "enters the rescue fallback on errors" do
       subject.call(factory.env('10.0.0.1', 'firefox'))
-      Rack::Dedos.config[:cache] = :invalid
+      subject.instance_variable_set(:@cache, :invalid)
       _(subject.call(factory.env('10.0.0.1', 'chrome'))).must_equal_status 200
     end
 

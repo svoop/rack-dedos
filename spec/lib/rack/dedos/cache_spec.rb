@@ -18,12 +18,6 @@ describe Rack::Dedos::Cache do
       Rack::Dedos::Cache.new(url: 'hash', expires_in: 1)
     end
 
-    describe :store do
-      it "returns an instance of Hash" do
-        _(subject.store).must_be_instance_of ::Hash
-      end
-    end
-
     describe :set, :get do
       let :key do
         SecureRandom.hex
@@ -38,6 +32,13 @@ describe Rack::Dedos::Cache do
         _(subject.get(key)).must_equal val
         sleep 2
         _(subject.get(key)).must_be :nil?
+      end
+
+      it "sets a value with custom expiration" do
+        subject.set(key, val, expires_in: 1000)
+        _(subject.get(key)).must_equal val
+        sleep 2
+        _(subject.get(key)).must_equal val
       end
 
       it "overwrites existing keys" do
@@ -63,18 +64,19 @@ describe Rack::Dedos::Cache do
         Rack::Dedos::Cache.new(url: 'redis://localhost:6379/12', expires_in: 1)
       end
 
-      describe :store do
-        it "returns an instance of Redis" do
-          _(subject.store).must_be_instance_of ::Redis
-        end
-      end
-
       describe :set, :get do
         it "sets a value and forgets it after expiration" do
           subject.set(key, val)
           _(subject.get(key)).must_equal val
           sleep 2
           _(subject.get(key)).must_be :nil?
+        end
+
+        it "sets a value with custom expiration" do
+          subject.set(key, val, expires_in: 1000)
+          _(subject.get(key)).must_equal val
+          sleep 2
+          _(subject.get(key)).must_equal val
         end
 
         it "overwrites existing keys" do
@@ -88,14 +90,14 @@ describe Rack::Dedos::Cache do
 
     context "key prefix set" do
       subject do
-        Rack::Dedos::Cache.new(url: 'redis://localhost:6379/12', expires_in: 1, key_prefix: 'dedos')
+        Rack::Dedos::Cache.new(url: 'redis://localhost:6379/12', key_prefix: 'dedos', expires_in: 1)
       end
 
       describe :set, :get do
         it "sets a value using the key prefix" do
           subject.set(key, val)
           _(subject.get(key)).must_equal val
-          _(subject.store.get("dedos:#{key}")).must_equal val
+          _(subject.instance_variable_get(:@store).with { _1.get("dedos:#{key}") }).must_equal val
         end
       end
     end

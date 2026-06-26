@@ -1,114 +1,140 @@
-## Main
+# Changelog
 
-### Changes
-* Relax dependency on connection_pool for better legacy support
+All notable changes to this project will be documented in this file.
 
-## 0.7.2
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
+and this project adheres to [Break Versioning](https://www.taoensso.com/break-versioning).
 
-### Additions
-* Spamhaus filter
+## [Unreleased]
 
-## 0.7.1
+### Changed
 
-### Improvements
-* Enforce MFA for future gem releases
+- Relaxed dependency on connection_pool for better legacy support
 
-## 0.7.0
+## [0.7.2] - 2026-06-26
 
-### Breaking changes
-* Change format of country code details in log
+### Added
 
-### Fixes
-* Drop keyword arguments for Rack compatibility
-* Fix collision with Rack::Logger
+- Spamhaus filter
 
-## 0.6.0 (yanked)
+## [0.7.1] - 2026-04-21
 
-### Breaking changes
-* Log to STDOUT (instead of STDERR) by default
+### Added
 
-### Additions
-* Suppport custom loggers
-* Optionally log request headers
+- Enforce MFA for future gem releases
 
-## 0.5.1
+## [0.7.0] - 2026-03-11
 
-### Fixes
-* Fix getcwd errors due to unlinked tmpdir
+### Changed
 
-## 0.5.0
+- **Breaking:** Changed format of country code details in log
 
-### Changes
-* Update to Ruby 4.0
-* Require Minitest >= 6
+### Fixed
 
-## 0.4.2
+- Dropped keyword arguments for Rack compatibility
+- Fixed collision with Rack::Logger
 
-### Changes
-* Use [BreakVer](https://www.taoensso.com/break-versioning) from this point forward
+## [0.6.0] - 2026-03-11
 
-### Additions
-* Include the requested URL in warnings
-* Add `only_paths` and `except_paths` options
+### Changed
 
-## 0.4.1
+- **Breaking:** Log to STDOUT (instead of STDERR) by default
 
-### Fixes
-* Correctly include details in warnings (i.e. country code)
+### Added
 
-## 0.4.0
+- Suppport custom loggers
+- Optionally log request headers
 
-### Changes
-* Drop certs
-* Add action for trusted release
+## [0.5.1] - 2026-01-08
 
-## 0.3.2
+### Fixed
 
-### Changes
-* Resolve all paths to prevent problems with relative paths
+- Fixed getcwd errors due to unlinked tmpdir
 
-## 0.3.1
+## [0.5.0] - 2026-01-06
 
-### Changes
-* Root `File` operations to prevent clashes with Rack
+### Changed
 
-## 0.3.0
+- Updated to Ruby 4.0
+- Require Minitest >= 6
 
-### Changes
-* Convert `geoipget` from Bash to Ruby
+## [0.4.2] - 2025-12-01
 
-## 0.2.4
+### Changed
 
-### Changes
-* Use Bash for `geoipget` to prevent problems with `/bin/sh` diversity
+- Adhere to [BreakVer](https://www.taoensso.com/break-versioning) from this point forward
 
-## 0.2.3
+### Added
 
-### Additions
-* `geoipget` shell script
+- Include the requested URL in warnings
+- Added `only_paths` and `except_paths` options
 
-## 0.2.2
+## [0.4.1] - 2025-11-04
 
-### Changes
-* Update to Ruby 3.4
+### Fixed
 
-## 0.2.1
+- Correctly include details in warnings (i.e. country code)
 
-### Fixes
+## [0.4.0] - 2025-07-21
 
-* Fix paths on conditional requires
-* Renew certificate
+### Changed
 
-## 0.2.0
+- Dropped certs
+- Addded action for trusted release
 
-### Changes
+## [0.3.2] - 2025-01-16
 
-* Determine real client IP
-* Drop autoload and put filters in proper namespace
+### Changed
 
-## 0.1.0
+- Resolve all paths to prevent problems with relative paths
 
-### Initial implementation
+## [0.3.1] - 2025-01-16
 
-* UserAgent filter
-* Country filter
+### Fixed
+
+- Root `File` operations to prevent clashes with Rack
+
+## [0.3.0] - 2025-01-16
+
+### Changed
+
+- Converted `geoipget` from Bash to Ruby
+
+## [0.2.4] - 2025-01-15
+
+### Changed
+
+- Use Bash for `geoipget` to prevent problems with `/bin/sh` diversity
+
+## [0.2.3] - 2025-01-15
+
+### Added
+
+- `geoipget` shell script
+
+## [0.2.2] - 2024-12-25
+
+### Changed
+
+- Updated to Ruby 3.4
+
+## [0.2.1] - 2024-11-20
+
+### Fixed
+
+- Fixed paths on conditional requires
+- Renewed certificate
+
+## [0.2.0] - 2023-05-16
+
+### Changed
+
+- Determine real client IP
+- Dropped autoload and put filters in proper namespace
+
+## [0.1.0] - 2023-02-03
+
+### Added
+
+- UserAgent filter
+- Country filter

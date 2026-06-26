@@ -1,6 +1,7 @@
 ## Main
 
-Nothing so far
+### Changes
+* Relax dependency on connection_pool for better legacy support
 
 ## 0.7.2
 

@@ -1,3 +1,7 @@
+## Main
+
+Nothing so far
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -6,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 and this project adheres to [Break Versioning](https://www.taoensso.com/break-versioning).
 
 ## [Unreleased]
+
+Nothing so far
+
+## [0.7.3] - 2026-06-26
 
 ### Changed
 
